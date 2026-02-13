@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 import { createCredit } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,6 +64,7 @@ export default function CreateCreditPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
+  const { token } = useAuth();
 
   function handleChange(field: keyof FormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -96,12 +98,15 @@ export default function CreateCreditPage() {
 
     setIsLoading(true);
     try {
-      await createCredit({
-        customerId: form.customerId,
-        purpose: form.purpose,
-        amount: Number(form.amount),
-        term: Number(form.term),
-      });
+      await createCredit(
+        {
+          customerId: form.customerId,
+          purpose: form.purpose,
+          amount: Number(form.amount),
+          term: Number(form.term),
+        },
+        token
+      );
       setIsSuccess(true);
       toast.success("Credito creado exitosamente");
       setTimeout(() => router.push("/credits"), 2000);

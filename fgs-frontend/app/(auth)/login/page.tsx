@@ -53,7 +53,6 @@ export default function LoginPage() {
       const data = await loginUser({ username, password });
       login(data.token, { username });
       toast.success("Inicio de sesion exitoso");
-      router.push("/dashboard");
     } catch (error) {
       toast.error(
         error instanceof Error

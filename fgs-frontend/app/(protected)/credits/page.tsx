@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import useSWR from "swr";
+import { useAuth } from "@/lib/auth-context";
 import { listCredits, getCreditsByCustomer, type Credit } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,12 +28,15 @@ export default function CreditsPage() {
   const [searchId, setSearchId] = useState("");
   const [searchResults, setSearchResults] = useState<Credit[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const { token } = useAuth();
 
   const {
     data: credits,
     isLoading,
     error,
-  } = useSWR("credits-list", () => listCredits());
+  } = useSWR(token ? ["credits-list", token] : null, ([_, t]) =>
+    listCredits(t)
+  );
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -43,7 +47,7 @@ export default function CreditsPage() {
 
     setIsSearching(true);
     try {
-      const results = await getCreditsByCustomer(searchId.trim());
+      const results = await getCreditsByCustomer(searchId.trim(), token);
       setSearchResults(Array.isArray(results) ? results : [results]);
       if ((Array.isArray(results) ? results : [results]).length === 0) {
         toast.info("No se encontraron creditos para este cliente");

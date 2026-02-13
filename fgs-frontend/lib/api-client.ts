@@ -6,13 +6,13 @@ function getToken(): string | null {
   return localStorage.getItem("auth_token");
 }
 
-function getAuthHeaders(): Record<string, string> {
-  const token = getToken();
+function getAuthHeaders(token?: string | null): Record<string, string> {
+  const authToken = token || getToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+  if (authToken) {
+    headers["Authorization"] = `Bearer ${authToken}`;
   }
   return headers;
 }
@@ -91,27 +91,33 @@ export interface Credit {
   [key: string]: unknown;
 }
 
-export async function createCredit(payload: CreateCreditPayload): Promise<Credit> {
+export async function createCredit(
+  payload: CreateCreditPayload,
+  token?: string | null
+): Promise<Credit> {
   const res = await fetch(`${PRODUCTS_BASE}/credits`, {
     method: "POST",
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(token),
     body: JSON.stringify(payload),
   });
   return handleResponse<Credit>(res);
 }
 
-export async function listCredits(): Promise<Credit[]> {
+export async function listCredits(token?: string | null): Promise<Credit[]> {
   const res = await fetch(`${PRODUCTS_BASE}/credits`, {
     method: "GET",
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(token),
   });
   return handleResponse<Credit[]>(res);
 }
 
-export async function getCreditsByCustomer(customerId: string): Promise<Credit[]> {
+export async function getCreditsByCustomer(
+  customerId: string,
+  token?: string | null
+): Promise<Credit[]> {
   const res = await fetch(`${PRODUCTS_BASE}/credits/${customerId}`, {
     method: "GET",
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(token),
   });
   return handleResponse<Credit[]>(res);
 }

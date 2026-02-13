@@ -8,12 +8,12 @@ import { RecentCredits } from "@/components/recent-credits";
 import { Loader2 } from "lucide-react";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const {
     data: credits,
     isLoading,
     error,
-  } = useSWR("credits-list", () => listCredits());
+  } = useSWR(token ? ["credits-list", token] : null, ([_, t]) => listCredits(t));
 
   return (
     <div className="flex flex-col gap-8 animate-fade-in">
