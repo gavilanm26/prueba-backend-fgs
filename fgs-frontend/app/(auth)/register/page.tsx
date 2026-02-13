@@ -45,7 +45,17 @@ export default function RegisterPage() {
   const router = useRouter();
 
   function handleChange(field: keyof FormData, value: string) {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    let newValue = value;
+
+    if (field === "username") {
+      newValue = value.replace(/\s/g, "");
+    }
+
+    if (field === "amount") {
+      newValue = value.replace(/\D/g, "");
+    }
+
+    setForm((prev) => ({ ...prev, [field]: newValue }));
     if (errors[field]) {
       setErrors((prev) => {
         const next = { ...prev };
@@ -111,37 +121,37 @@ export default function RegisterPage() {
     type: string;
     placeholder: string;
   }[] = [
-    {
-      key: "username",
-      label: "Usuario",
-      type: "text",
-      placeholder: "Nombre de usuario",
-    },
-    {
-      key: "name",
-      label: "Nombre completo",
-      type: "text",
-      placeholder: "Tu nombre completo",
-    },
-    {
-      key: "document",
-      label: "Documento",
-      type: "text",
-      placeholder: "Numero de documento",
-    },
-    {
-      key: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "correo@ejemplo.com",
-    },
-    {
-      key: "amount",
-      label: "Monto inicial",
-      type: "number",
-      placeholder: "1000",
-    },
-  ];
+      {
+        key: "username",
+        label: "Usuario",
+        type: "text",
+        placeholder: "Nombre de usuario",
+      },
+      {
+        key: "name",
+        label: "Nombre completo",
+        type: "text",
+        placeholder: "Tu nombre completo",
+      },
+      {
+        key: "document",
+        label: "Documento",
+        type: "text",
+        placeholder: "Numero de documento",
+      },
+      {
+        key: "email",
+        label: "Email",
+        type: "email",
+        placeholder: "correo@ejemplo.com",
+      },
+      {
+        key: "amount",
+        label: "Monto inicial",
+        type: "number",
+        placeholder: "1000",
+      },
+    ];
 
   return (
     <div className="animate-fade-in">
