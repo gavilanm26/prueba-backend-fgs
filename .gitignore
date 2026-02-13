@@ -1,0 +1,20 @@
+# envs
+#.env
+**/.env
+
+# node
+node_modules
+**/node_modules
+
+# next
+.next
+
+# logs
+*.log
+
+# mac
+.DS_Store
+
+# docker volumes (opcional)
+mongo_data
+redis_data
