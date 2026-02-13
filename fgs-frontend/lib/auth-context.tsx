@@ -50,6 +50,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     (newToken: string, newUser: User) => {
+      if (!newToken || newToken === "undefined") {
+        console.error("Attempted to login with invalid token:", newToken);
+        return;
+      }
       localStorage.setItem("auth_token", newToken);
       localStorage.setItem("auth_user", JSON.stringify(newUser));
       setToken(newToken);

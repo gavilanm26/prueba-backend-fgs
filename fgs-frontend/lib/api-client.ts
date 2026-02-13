@@ -1,5 +1,5 @@
-const IDENTITY_BASE = process.env.NEXT_PUBLIC_IDENTITY_API_URL ?? "http://localhost:3010";
-const PRODUCTS_BASE = process.env.NEXT_PUBLIC_PRODUCTS_API_URL ?? "http://localhost:3000";
+const IDENTITY_BASE = process.env.NEXT_PUBLIC_IDENTITY_API_URL ?? "http://localhost:3001";
+const PRODUCTS_BASE = process.env.NEXT_PUBLIC_PRODUCTS_API_URL ?? "http://localhost:3002";
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -11,7 +11,8 @@ function getAuthHeaders(token?: string | null): Record<string, string> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-  if (authToken) {
+
+  if (authToken && authToken !== "undefined") {
     headers["Authorization"] = `Bearer ${authToken}`;
   }
   return headers;
@@ -58,7 +59,7 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  token: string;
+  accessToken: string;
   [key: string]: unknown;
 }
 

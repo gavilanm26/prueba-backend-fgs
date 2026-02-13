@@ -51,8 +51,14 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       const data = await loginUser({ username, password });
-      login(data.token, { username });
-      toast.success("Inicio de sesion exitoso");
+
+      if (data.accessToken) {
+        login(data.accessToken, { username });
+        toast.success("Inicio de sesion exitoso");
+        router.push("/dashboard");
+      } else {
+        throw new Error("Respuesta inválida del servidor");
+      }
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -139,15 +145,11 @@ export default function LoginPage() {
               )}
             </div>
 
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="mt-2 h-11 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200"
-            >
+            <Button className="w-full mt-6" type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Ingresando...
+                  Cargando...
                 </>
               ) : (
                 "Iniciar Sesion"
