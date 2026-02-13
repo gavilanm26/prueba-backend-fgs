@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CreditsModule } from './credits/credits.module';
-import { HealthModule } from './health/health.module';
+import { CreditsModule } from './modules/credits/credits.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [

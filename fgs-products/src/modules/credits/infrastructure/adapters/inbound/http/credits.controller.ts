@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, UseGuards } from '@nestjs/common';
 import { CreateCreditApplicationUseCase } from '../../../../application/use-cases/create-credit-application.usecase';
 import { GetCreditApplicationsUseCase } from '../../../../application/use-cases/get-credit-applications.usecase';
 import { GetCreditApplicationByCustomerIdUseCase } from '../../../../application/use-cases/get-credit-application-by-id.usecase';
@@ -6,8 +6,10 @@ import { CreateCreditApplicationHttpDto } from './dto/create-credit-application.
 import { CreateCreditApplicationInputDto } from '../../../../application/dto/create-credit-application.input.dto';
 import { CreateCreditApplicationOutputDto } from '../../../../application/dto/create-credit-application.output.dto';
 import { CreditApplicationOutputDto } from '../../../../application/dto/credit-application.output.dto';
+import { CreditsTokenGuard } from './guards/credits-token.guard';
 
 @Controller('credits')
+@UseGuards(CreditsTokenGuard)
 export class CreditsController {
     constructor(
         private readonly createUseCase: CreateCreditApplicationUseCase,

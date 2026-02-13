@@ -10,6 +10,7 @@ import {
     CreditApplicationDocument,
     CreditApplicationSchema,
 } from './infrastructure/persistence/schemas/credit-application.schema';
+import { CreditsTokenGuard } from './infrastructure/adapters/inbound/http/guards/credits-token.guard';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import {
         CreateCreditApplicationUseCase,
         GetCreditApplicationsUseCase,
         GetCreditApplicationByCustomerIdUseCase,
+        CreditsTokenGuard,
         {
             provide: CREDIT_APPLICATION_REPOSITORY_PORT,
             useClass: MongoCreditApplicationRepositoryAdapter,

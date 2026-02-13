@@ -24,8 +24,36 @@ export class JwtGeneratorAdapter implements JwtGeneratorPort {
     );
 
     const expiresInConfig = this.configService.get<string>('JWT_EXPIRES_IN') || '3600';
-    const expiresIn = Number(expiresInConfig);
+    const expiresIn = this.parseExpirationTime(expiresInConfig);
 
     return new Token(accessToken, expiresIn);
+  }
+
+  private parseExpirationTime(timeString: string): number {
+    const numericValue = Number(timeString);
+    if (!isNaN(numericValue)) {
+      return numericValue;
+    }
+
+    const match = timeString.match(/^(\d+)([smhd])$/);
+    if (!match) {
+      return 3600;
+    }
+
+    const value = parseInt(match[1], 10);
+    const unit = match[2];
+
+    switch (unit) {
+      case 's':
+        return value;
+      case 'm':
+        return value * 60;
+      case 'h':
+        return value * 60 * 60;
+      case 'd':
+        return value * 24 * 60 * 60;
+      default:
+        return 3600;
+    }
   }
 }

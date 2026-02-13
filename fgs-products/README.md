@@ -1,98 +1,293 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# FGS Products - Microservicio de Gestión de Créditos
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Microservicio de gestión de solicitudes de crédito construido con **NestJS**, siguiendo los principios de **Arquitectura Hexagonal (Puertos y Adaptadores)**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Características Principales
 
-## Description
+- **Arquitectura Hexagonal**: Separación estricta entre dominio, aplicación e infraestructura
+- **Autenticación JWT**: Validación de tokens firmados con RS256
+- **MongoDB**: Persistencia de solicitudes de crédito
+- **Guards Personalizados**: Validación y desencriptación de tokens JWT
+- **Logging Estructurado**: Trazabilidad completa de operaciones
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🏗️ Arquitectura
 
-## Project setup
+El proyecto sigue una estructura de capas:
 
-```bash
-$ npm install
+- **Domain**: Entidades, objetos de valor y puertos (interfaces)
+- **Application**: Casos de uso (orquestación) y DTOs
+- **Infrastructure**: Adaptadores de entrada (HTTP) y salida (MongoDB)
+
+## 🛠️ Configuración
+
+### Variables de Entorno
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```env
+# Server
+PORT=3000
+
+# MongoDB
+MONGO_CONNECTION_STRING=mongodb://localhost:27017
+
+# JWT Configuration (debe coincidir con fgs-identity-management)
+JWT_PUBLIC_KEY=<clave_publica_base64>
+JWT_KEY=claveRedis
 ```
 
-## Compile and run the project
+> **⚠️ IMPORTANTE**: La `JWT_PUBLIC_KEY` debe ser la misma que se usa en el servicio `fgs-identity-management` para que la validación de tokens funcione correctamente.
+
+### Dependencias Externas
+
+Este microservicio requiere:
+
+1. **MongoDB** corriendo en `localhost:27017`
+2. **fgs-identity-management** corriendo en `localhost:3010` para autenticación
+
+## 🚀 Ejecución
 
 ```bash
-# development
-$ npm run start
+# Instalación de dependencias
+npm install
 
-# watch mode
-$ npm run start:dev
+# Modo desarrollo
+npm run start:dev
 
-# production mode
-$ npm run start:prod
+# Producción
+npm run start:prod
 ```
 
-## Run tests
+## 🧪 Pruebas
 
 ```bash
-# unit tests
-$ npm run test
+# Ejecutar todas las pruebas unitarias
+npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Cobertura de código
+npm run test:cov
 ```
 
-## Deployment
+## 📡 Endpoints
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Autenticación
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Todos los endpoints requieren un token JWT válido en el header `Authorization`:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+Authorization: Bearer <token>
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
-## Resources
+Para obtener un token, primero debes autenticarte en el servicio `fgs-identity-management`:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+curl --location 'http://localhost:3010/v1/auth' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "username": "Juan",
+    "password": "clave1234"
+  }'
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Crear Solicitud de Crédito
 
-## Support
+`POST /credits`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Crea una nueva solicitud de crédito para un cliente.
 
-## Stay in touch
+**Ejemplo de cURL:**
+```bash
+curl --location 'http://localhost:3000/credits' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer <TOKEN_AQUI>' \
+  --data '{
+    "customerId": "123456795",
+    "purpose": "Compra de vehiculo",
+    "amount": 50000,
+    "term": 48
+  }'
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+> **Nota:** Reemplaza `<TOKEN_AQUI>` con el token JWT obtenido del endpoint `/v1/auth`.
 
-## License
+**Respuesta exitosa:**
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "customerId": "123456795",
+  "purpose": "Compra de vehiculo",
+  "amount": 50000,
+  "term": 48,
+  "status": "pending",
+  "createdAt": "2026-02-12T22:00:00.000Z"
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Listar Todas las Solicitudes
+
+`GET /credits`
+
+Obtiene todas las solicitudes de crédito registradas en el sistema.
+
+**Ejemplo de cURL:**
+```bash
+curl --location 'http://localhost:3000/credits' \
+  --header 'Authorization: Bearer <TOKEN_AQUI>'
+```
+
+> **Nota:** Reemplaza `<TOKEN_AQUI>` con el token JWT obtenido del endpoint `/v1/auth`.
+
+**Respuesta exitosa:**
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439011",
+    "customerId": "123456795",
+    "purpose": "Compra de vehiculo",
+    "amount": 50000,
+    "term": 48,
+    "status": "pending",
+    "createdAt": "2026-02-12T22:00:00.000Z"
+  }
+]
+```
+
+### Obtener Solicitudes por Cliente
+
+`GET /credits/:customerId`
+
+Obtiene todas las solicitudes de crédito de un cliente específico.
+
+**Ejemplo de cURL:**
+```bash
+curl --location 'http://localhost:3000/credits/123456795' \
+  --header 'Authorization: Bearer <TOKEN_AQUI>'
+```
+
+> **Nota:** Reemplaza `<TOKEN_AQUI>` con el token JWT obtenido del endpoint `/v1/auth`.
+
+**Respuesta exitosa:**
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439011",
+    "customerId": "123456795",
+    "purpose": "Compra de vehiculo",
+    "amount": 50000,
+    "term": 48,
+    "status": "pending",
+    "createdAt": "2026-02-12T22:00:00.000Z"
+  }
+]
+
+
+**Respuesta:**
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439011",
+    "customerId": "12345",
+    "amount": 5000,
+    "term": 12,
+    "status": "pending",
+    "createdAt": "2026-02-12T22:00:00.000Z"
+  }
+]
+```
+
+### Obtener Solicitudes por Cliente
+
+`GET /credits/:customerId`
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Respuesta:**
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439011",
+    "customerId": "12345",
+    "amount": 5000,
+    "term": 12,
+    "status": "pending",
+    "createdAt": "2026-02-12T22:00:00.000Z"
+  }
+]
+```
+
+## 🔐 Autenticación y Seguridad
+
+### Flujo de Autenticación
+
+1. El cliente se autentica en `fgs-identity-management` (`POST /v1/auth`)
+2. Recibe un token JWT firmado con RS256 y payload encriptado con AES-256-GCM
+3. Incluye el token en el header `Authorization: Bearer <token>` en cada petición
+4. El `CreditsTokenGuard` valida:
+   - Formato del token (3 partes: header.payload.signature)
+   - Algoritmo de firma (RS256)
+   - Firma digital usando la clave pública
+   - Expiración del token
+   - Desencriptación del payload
+
+### Validación del Token
+
+El guard personalizado `CreditsTokenGuard` realiza las siguientes validaciones:
+
+1. **Verificación de firma**: Usando la clave pública RSA
+2. **Validación de expiración**: Compara `exp` con el tiempo actual
+3. **Desencriptación del payload**: Usando AES-256-GCM con la clave compartida
+4. **Extracción de usuario**: Obtiene `sub` (user ID) y `username` del payload desencriptado
+
+## 🛠️ Script de Prueba
+
+Se incluye un script de prueba automatizado para verificar el flujo completo de autenticación:
+
+```bash
+./test-credits-endpoint.sh
+```
+
+Este script:
+1. Obtiene un token del servicio de autenticación
+2. Muestra el tiempo de expiración
+3. Llama al endpoint `/credits` con el token
+4. Muestra la respuesta
+
+## 🐛 Troubleshooting
+
+### Error: "Token expired"
+
+**Causa**: El token JWT ha expirado (duración: 5 minutos)
+
+**Solución**: Obtén un nuevo token del servicio de autenticación
+
+### Error: "Invalid token"
+
+**Causas posibles**:
+1. La `JWT_PUBLIC_KEY` no coincide con la del servicio `fgs-identity-management`
+2. El token está mal formado
+3. La firma no es válida
+
+**Solución**: Verifica que las claves públicas coincidan en ambos servicios
+
+### Token en caché antiguo
+
+Si Redis está cacheando tokens antiguos, limpia el caché:
+
+```bash
+redis-cli -a claveRedis FLUSHALL
+```
+
+## 📝 Notas Técnicas
+
+- Los tokens JWT tienen una duración de **5 minutos** (300,000 ms)
+- El payload del token está encriptado con **AES-256-GCM**
+- La firma usa el algoritmo **RS256** (RSA con SHA-256)
+- Las claves públicas deben estar sincronizadas entre servicios
+
+---
+
+Desarrollado con ❤️ siguiendo los estándares de arquitectura limpia.
