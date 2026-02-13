@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { CreateCreditApplicationUseCase } from '../../../../application/use-cases/create-credit-application.usecase';
 import { GetCreditApplicationsUseCase } from '../../../../application/use-cases/get-credit-applications.usecase';
 import { GetCreditApplicationByCustomerIdUseCase } from '../../../../application/use-cases/get-credit-application-by-id.usecase';
@@ -29,8 +29,9 @@ export class CreditsController {
     }
 
     @Get()
-    async findAll(): Promise<CreditApplicationOutputDto[]> {
-        return this.getAllUseCase.execute();
+    async findAll(@Req() req: any): Promise<CreditApplicationOutputDto[]> {
+        const user = req.user;
+        return this.getAllUseCase.execute(user?.sub);
     }
 
     @Get(':customerId')

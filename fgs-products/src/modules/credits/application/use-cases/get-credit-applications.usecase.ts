@@ -10,8 +10,8 @@ export class GetCreditApplicationsUseCase {
         private readonly repository: CreditApplicationRepositoryPort,
     ) { }
 
-    async execute(): Promise<CreditApplicationOutputDto[]> {
-        const applications = await this.repository.findAll();
+    async execute(customerId?: string): Promise<CreditApplicationOutputDto[]> {
+        const applications = await this.repository.findAll(customerId);
         return applications.map(
             (app) =>
                 new CreditApplicationOutputDto(

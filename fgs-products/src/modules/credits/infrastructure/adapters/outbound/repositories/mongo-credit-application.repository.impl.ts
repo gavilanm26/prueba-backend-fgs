@@ -36,12 +36,14 @@ export class MongoCreditApplicationRepositoryAdapter implements CreditApplicatio
         }
     }
 
-    async findAll(): Promise<CreditApplication[]> {
-        this.logger.log('Fetching all credit applications');
+    async findAll(customerId?: string): Promise<CreditApplication[]> {
+        this.logger.log(`Fetching credit applications${customerId ? ` for customer: ${customerId}` : ''}`);
         const startTime = Date.now();
 
         try {
-            const docs = await this.model.find().exec();
+            const filter = customerId ? { customerId } : {};
+            const docs = await this.model.find(filter).exec();
+
             const result = OutboundMapper.toDomainList(docs);
 
             const duration = Date.now() - startTime;

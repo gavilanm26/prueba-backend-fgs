@@ -4,6 +4,6 @@ export const CREDIT_APPLICATION_REPOSITORY_PORT = 'CREDIT_APPLICATION_REPOSITORY
 
 export interface CreditApplicationRepositoryPort {
     save(application: CreditApplication): Promise<CreditApplication>;
-    findAll(): Promise<CreditApplication[]>;
+    findAll(customerId?: string): Promise<CreditApplication[]>;
     findByCustomerId(customerId: string): Promise<CreditApplication | null>;
 }
