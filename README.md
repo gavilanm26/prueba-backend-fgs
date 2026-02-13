@@ -4,6 +4,10 @@ Esta solución está compuesta por **microservicios independientes**, agrupados 
 
 Con un solo comando es posible levantar **Frontend + Backend + Bases de datos**.
 
+> ⚠️ **Nota importante**  
+> Únicamente para efectos de esta prueba técnica, los archivos `.env` fueron incluidos en el repositorio con el fin de permitir ejecutar la solución inmediatamente sin configuraciones adicionales.  
+> En un entorno productivo real, estos archivos **no deben versionarse** y deben gestionarse mediante variables de entorno seguras.
+
 ---
 
 ## Requisitos
