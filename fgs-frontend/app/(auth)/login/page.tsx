@@ -18,14 +18,23 @@ import {
 import { CreditCard, Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
+import { useEffect } from "react";
+// ... imports
+
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
 
   function validate() {
     const newErrors: Record<string, string> = {};

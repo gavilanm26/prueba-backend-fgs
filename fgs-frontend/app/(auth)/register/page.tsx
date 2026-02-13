@@ -47,7 +47,7 @@ export default function RegisterPage() {
   function handleChange(field: keyof FormData, value: string) {
     let newValue = value;
 
-    if (field === "username") {
+    if (field === "username" || field === "name") {
       newValue = value.replace(/\s/g, "");
     }
 
