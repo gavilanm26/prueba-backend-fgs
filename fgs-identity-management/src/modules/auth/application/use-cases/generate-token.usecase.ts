@@ -46,7 +46,7 @@ export class GenerateTokenUseCase {
       };
     }
 
-    const payload = new TokenPayload(user.userId, input.username);
+    const payload = new TokenPayload(user.userId, input.username, user.document);
 
     const token = await this.jwtGenerator.generate(payload);
 

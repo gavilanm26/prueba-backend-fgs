@@ -31,7 +31,8 @@ export class CreditsController {
     @Get()
     async findAll(@Req() req: any): Promise<CreditApplicationOutputDto[]> {
         const user = req.user;
-        return this.getAllUseCase.execute(user?.sub);
+        console.log('CreditsController.findAll - User:', JSON.stringify(user));
+        return this.getAllUseCase.execute(user?.document);
     }
 
     @Get(':customerId')

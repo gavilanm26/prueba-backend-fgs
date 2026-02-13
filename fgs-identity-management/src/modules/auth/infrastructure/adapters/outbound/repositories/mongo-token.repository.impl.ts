@@ -14,7 +14,7 @@ export class MongoTokenRepository implements TokenRepositoryPort {
     const user = await this.userModel.findOne({ username, password }).exec();
 
     if (user) {
-      return { userId: user._id.toString() };
+      return { userId: user._id.toString(), document: user.document };
     }
     return null;
   }

@@ -22,6 +22,7 @@ type JwtPayload = {
 type TokenUser = {
   sub: string;
   username: string;
+  document: string;
 };
 
 @Injectable()
@@ -62,6 +63,7 @@ export class CreditsTokenGuard implements CanActivate {
     request.user = {
       sub: decryptedPayload.sub,
       username: decryptedPayload.username,
+      document: decryptedPayload.document,
     };
 
     return true;
