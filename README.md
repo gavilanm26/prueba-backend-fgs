@@ -4,7 +4,12 @@ Esta solución está construida siguiendo una **arquitectura de microservicios i
 
 Para facilitar la evaluación de la prueba técnica, todos los servicios fueron agrupados en un único repositorio, permitiendo levantar toda la solución en un solo comando.
 
-La solución puede ejecutarse de dos formas: usando **Docker** (recomendado) o ejecutando los servicios **localmente**.
+
+La solución puede ejecutarse de diferentes formas según la necesidad:
+
+1.  **Full Stack con Docker (Recomendado)**: Levanta Frontend + Backend + BDs.
+2.  **Solo Backend con Docker**: Levanta solo los servicios y BDs.
+3.  **Híbrido / Local**: Ejecuta servicios individualmente (útil para desarrollo).
 
 ## 📋 Requisitos
 
@@ -21,7 +26,9 @@ git clone https://github.com/usuario/prueba-backend.git
 cd prueba-backend
 ```
 
-### 2. Levantar la infraestructura (MongoDB y Redis) y los servicios:
+### 2. Levantar la infraestructura completa (Frontend + Backend + BDs):
+
+Esta es la opción recomendada, ya que levanta **toda la solución** (incluyendo el frontend) lista para probar.
 
 ```bash
 docker compose up --build
@@ -33,6 +40,7 @@ docker compose up --build
 |----------|-----|
 | **Identity / Auth / Onboarding** | http://localhost:3001 |
 | **Products** | http://localhost:3002 |
+| **Frontend** | http://localhost:3000 |
 
 ### 4. Infraestructura:
 
@@ -105,9 +113,10 @@ GET http://localhost:3002/products/{id}
 ```
 prueba-backend-fgs/
 ├── fgs-identity-management/    # Servicio de autenticación y onboarding
-├── fgs-products/                # Servicio de productos
-├── docker-compose.yml           # Orquestación de servicios
-└── README.md                    # Este archivo
+├── fgs-products/               # Servicio de productos
+├── fgs-frontend/               # Aplicación web frontend (Next.js)
+├── docker-compose.yml          # Orquestación de servicios
+└── README.md                   # Este archivo
 ```
 
 ## 📚 Documentación de Servicios
@@ -116,6 +125,7 @@ Cada microservicio tiene su propia documentación detallada:
 
 - [Identity Management](./fgs-identity-management/README.md)
 - [Products](./fgs-products/README.md)
+- [Frontend](./fgs-frontend/README.md)
 
 ---
 
